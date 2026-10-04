@@ -35,8 +35,39 @@ export default function Home() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // STRICT VALIDATION FOR STEP 1
+  const handleNextStep1 = () => {
+    if (!formData.teamName.trim()) {
+      alert("⚠️ REQUIRED: Please enter your Team Name.");
+      return;
+    }
+    setActiveStep(2);
+  };
+
+  // STRICT VALIDATION FOR STEP 2
+  const handleNextStep2 = () => {
+    if (!formData.leadName.trim()) {
+      alert("⚠️ REQUIRED: Please enter the Team Lead's Name.");
+      return;
+    }
+    if (!formData.phoneNumber.trim()) {
+      alert("⚠️ REQUIRED: Please enter the Contact Sequence (Phone Number).");
+      return;
+    }
+    setActiveStep(3);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // STRICT VALIDATION FOR STEP 3
+    for (let i = 0; i < formData.githubUsernames.length; i++) {
+      if (!formData.githubUsernames[i].trim()) {
+        alert(`⚠️ REQUIRED: Please enter the GitHub username for Member ${i + 1}.`);
+        return;
+      }
+    }
+
     setLoading(true);
 
     const res = await fetch("/api/register", {
@@ -62,7 +93,6 @@ export default function Home() {
 
       <div className="relative z-10 w-full max-w-2xl bg-gray-950/80 border border-green-500/30 shadow-[0_0_30px_rgba(34,197,94,0.15)] rounded-2xl overflow-hidden backdrop-blur-md p-6 md:p-10">
         
-        {/* Compact Header Replacing the Sidebar */}
         <div className="text-center mb-8 border-b border-green-500/20 pb-6">
           <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-500 mb-2 tracking-tighter">
             BREAK-A-THON
@@ -80,7 +110,7 @@ export default function Home() {
             <div className="space-y-5">
               <div>
                 <label className="block text-xs text-green-500/70 mb-2 uppercase tracking-wider">Team Name *</label>
-                <input required={activeStep === 1} name="teamName" value={formData.teamName} onChange={handleChange} type="text" className="w-full bg-black border border-gray-800 rounded-lg p-3 text-green-400 focus:outline-none focus:border-green-500 transition-all placeholder-gray-700" placeholder="e.g. Byte Builders" />
+                <input name="teamName" value={formData.teamName} onChange={handleChange} type="text" className="w-full bg-black border border-gray-800 rounded-lg p-3 text-green-400 focus:outline-none focus:border-green-500 transition-all placeholder-gray-700" placeholder="e.g. Byte Builders" />
               </div>
               <div>
                 <label className="block text-xs text-green-500/70 mb-2 uppercase tracking-wider">Project PPT Link</label>
@@ -93,7 +123,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <button type="button" onClick={() => setActiveStep(2)} className="mt-8 px-6 py-3 w-full bg-green-500/10 border border-green-500 text-green-400 rounded-lg hover:bg-green-500 hover:text-black transition-all font-bold">Next Step &rarr;</button>
+            <button type="button" onClick={handleNextStep1} className="mt-8 px-6 py-3 w-full bg-green-500/10 border border-green-500 text-green-400 rounded-lg hover:bg-green-500 hover:text-black transition-all font-bold">Next Step &rarr;</button>
           </div>
 
           <div className={activeStep === 2 ? "block animate-fade-in" : "hidden"}>
@@ -104,16 +134,16 @@ export default function Home() {
             <div className="space-y-5">
               <div>
                 <label className="block text-xs text-green-500/70 mb-2 uppercase tracking-wider">Lead Full Name *</label>
-                <input required={activeStep === 2} name="leadName" value={formData.leadName} onChange={handleChange} type="text" className="w-full bg-black border border-gray-800 rounded-lg p-3 text-green-400 focus:outline-none focus:border-green-500 transition-all placeholder-gray-700" placeholder="John Doe" />
+                <input name="leadName" value={formData.leadName} onChange={handleChange} type="text" className="w-full bg-black border border-gray-800 rounded-lg p-3 text-green-400 focus:outline-none focus:border-green-500 transition-all placeholder-gray-700" placeholder="John Doe" />
               </div>
               <div>
                 <label className="block text-xs text-green-500/70 mb-2 uppercase tracking-wider">Phone Number *</label>
-                <input required={activeStep === 2} name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} type="tel" className="w-full bg-black border border-gray-800 rounded-lg p-3 text-green-400 focus:outline-none focus:border-green-500 transition-all placeholder-gray-700" placeholder="+91..." />
+                <input name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} type="tel" className="w-full bg-black border border-gray-800 rounded-lg p-3 text-green-400 focus:outline-none focus:border-green-500 transition-all placeholder-gray-700" placeholder="+91..." />
               </div>
             </div>
             <div className="mt-8 flex gap-4">
               <button type="button" onClick={() => setActiveStep(1)} className="px-6 py-3 border border-gray-700 text-gray-400 rounded-lg hover:text-white transition-all">&larr; Back</button>
-              <button type="button" onClick={() => setActiveStep(3)} className="flex-1 bg-green-500/10 border border-green-500 text-green-400 rounded-lg hover:bg-green-500 hover:text-black transition-all font-bold">Next Step &rarr;</button>
+              <button type="button" onClick={handleNextStep2} className="flex-1 bg-green-500/10 border border-green-500 text-green-400 rounded-lg hover:bg-green-500 hover:text-black transition-all font-bold">Next Step &rarr;</button>
             </div>
           </div>
 
@@ -137,7 +167,7 @@ export default function Home() {
                 {formData.githubUsernames.map((_, index) => (
                   <div key={index}>
                     <label className="block text-xs text-green-500/70 mb-1 uppercase tracking-wider">Member {index + 1} GitHub *</label>
-                    <input required={activeStep === 3} type="text" value={formData.githubUsernames[index]} onChange={(e) => handleGithubChange(index, e.target.value)} className="w-full bg-black border border-gray-800 rounded-lg p-3 text-green-400 focus:outline-none focus:border-green-500 transition-all placeholder-gray-700" placeholder="GitHub Username" />
+                    <input name={`github_${index}`} type="text" value={formData.githubUsernames[index]} onChange={(e) => handleGithubChange(index, e.target.value)} className="w-full bg-black border border-gray-800 rounded-lg p-3 text-green-400 focus:outline-none focus:border-green-500 transition-all placeholder-gray-700" placeholder="GitHub Username" />
                   </div>
                 ))}
               </div>
