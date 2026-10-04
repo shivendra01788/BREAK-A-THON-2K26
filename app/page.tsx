@@ -57,13 +57,11 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-black text-green-400 font-mono flex items-center justify-center p-4 selection:bg-green-500 selection:text-black">
-      {/* Background glowing orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-green-600/10 rounded-full blur-[100px] pointer-events-none"></div>
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
 
       <div className="relative z-10 w-full max-w-4xl bg-gray-950/80 border border-green-500/30 shadow-[0_0_30px_rgba(34,197,94,0.15)] rounded-2xl overflow-hidden backdrop-blur-md flex flex-col md:flex-row">
         
-        {/* Sidebar */}
         <div className="md:w-1/3 bg-gray-900/50 p-8 border-b md:border-b-0 md:border-r border-green-500/20">
           <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-500 mb-2 tracking-tighter">
             BREAK-A-THON
@@ -83,11 +81,9 @@ export default function Home() {
           </nav>
         </div>
 
-        {/* Form Content */}
         <div className="md:w-2/3 p-8 flex flex-col justify-center min-h-[450px]">
           <form onSubmit={handleSubmit} className="space-y-6">
             
-            {/* Step 1 */}
             <div className={activeStep === 1 ? "block animate-fade-in" : "hidden"}>
               <h2 className="text-xl mb-6 text-white font-bold">Team Details</h2>
               <div className="space-y-5">
@@ -98,9 +94,11 @@ export default function Home() {
                 <div>
                   <label className="block text-xs text-green-500/70 mb-2 uppercase tracking-wider">Project PPT Link</label>
                   <input name="pptLink" value={formData.pptLink} onChange={handleChange} type="url" className="w-full bg-black border border-gray-800 rounded-lg p-3 text-green-400 focus:outline-none focus:border-green-500 transition-all placeholder-gray-700" placeholder="https://docs.google.com/..." />
-                  <div className="mt-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-                    <p className="text-xs text-red-400 leading-relaxed">
-                      * Those who have not submitted their project in the Google form provided by us, it will be compulsory for them to fill this area.
+                  
+                  {/* Updated Professional PPT Disclaimer */}
+                  <div className="mt-3 p-3 bg-red-500/10 border-l-4 border-red-500 rounded-r-lg">
+                    <p className="text-xs text-red-400 font-medium">
+                      ⚠️ <span className="font-bold">Required Exception:</span> Provide a presentation link here ONLY if your project was not submitted via the official Google Form.
                     </p>
                   </div>
                 </div>
@@ -108,7 +106,6 @@ export default function Home() {
               <button type="button" onClick={() => setActiveStep(2)} className="mt-8 px-6 py-2 bg-green-500/10 border border-green-500 text-green-400 rounded hover:bg-green-500 hover:text-black transition-all font-bold">Next Step &rarr;</button>
             </div>
 
-            {/* Step 2 */}
             <div className={activeStep === 2 ? "block animate-fade-in" : "hidden"}>
               <h2 className="text-xl mb-6 text-white font-bold">Team Lead Details</h2>
               <div className="space-y-5">
@@ -127,7 +124,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Step 3 */}
             <div className={activeStep === 3 ? "block animate-fade-in" : "hidden"}>
               <h2 className="text-xl mb-6 text-white font-bold">Team Members</h2>
               <div className="space-y-4">
