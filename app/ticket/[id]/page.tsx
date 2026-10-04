@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
-import { QRCodeCanvas } from "qrcode.react"; // CHANGED TO CANVAS
+import { QRCodeCanvas } from "qrcode.react";
 import { toPng } from "html-to-image";
 
 export default function TicketPage() {
@@ -49,10 +49,14 @@ export default function TicketPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-black text-green-400 font-mono">Loading Pass Data...</div>;
   if (!teamData) return <div className="min-h-screen flex items-center justify-center bg-black text-red-500 font-mono">Pass not found.</div>;
 
+  // The full URL that will be encoded into the QR code
+  const ticketUrl = `https://break-a-thon-2-k26-qglk.vercel.app/ticket/${teamData.id}`;
+
   return (
     <main className="min-h-screen bg-black text-green-400 font-mono flex flex-col items-center justify-center p-4 selection:bg-green-500 selection:text-black">
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-green-600/10 rounded-full blur-[100px] pointer-events-none"></div>
 
+      {/* The Actual Pass (Target for Download) */}
       <div 
         ref={ticketRef} 
         className="relative z-10 max-w-sm w-full bg-gray-950/90 rounded-2xl shadow-[0_0_40px_rgba(34,197,94,0.15)] overflow-hidden border border-green-500/50 backdrop-blur-md"
@@ -78,8 +82,8 @@ export default function TicketPage() {
           </div>
 
           <div className="bg-white p-4 rounded-xl shadow-[0_0_30px_rgba(34,197,94,0.3)] mb-6 inline-block border-2 border-green-500">
-            {/* CHANGED TO CANVAS HERE */}
-            <QRCodeCanvas value={teamData.id} size={180} level="H" marginSize={2} />
+            {/* Using QRCodeCanvas and Full URL for perfect scanning */}
+            <QRCodeCanvas value={ticketUrl} size={180} level="H" marginSize={2} />
           </div>
 
           <div className="w-full grid grid-cols-2 gap-4 border-t border-b border-green-500/30 py-4 mb-6">
