@@ -18,8 +18,11 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true, teamId: team.id });
-  } catch (error) {
-    console.error("Registration error:", error);
-    return NextResponse.json({ error: "Failed to register team" }, { status: 500 });
+  } catch (error: any) {
+    console.error("Registration raw error:", error);
+    // This will now send the exact Prisma error directly to your screen
+    return NextResponse.json({ 
+      error: error.message ? `DB Error: ${error.message}` : "Failed to register team" 
+    }, { status: 500 });
   }
 }
