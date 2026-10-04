@@ -1,5 +1,8 @@
 import { prisma } from '@/lib/db';
 
+// THIS LINE IS THE MAGIC FIX. It stops Vercel from caching the page!
+export const dynamic = 'force-dynamic'; 
+
 export default async function CheckInPage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const teamId = params.id;
@@ -7,7 +10,7 @@ export default async function CheckInPage(props: { params: Promise<{ id: string 
   try {
     const team = await prisma.team.update({
       where: { id: teamId },
-      data: { isPresent: true }
+      data: { isPresent: true } // Now this will successfully run every single time
     });
 
     return (

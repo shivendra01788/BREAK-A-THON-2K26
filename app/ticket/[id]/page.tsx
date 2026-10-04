@@ -50,7 +50,7 @@ export default function TicketPage() {
   if (!teamData) return <div className="min-h-screen flex items-center justify-center bg-black text-red-500 font-mono">Pass not found.</div>;
 
   // The full URL that will be encoded into the QR code
-  const ticketUrl = `https://break-a-thon-2-k26-qglk.vercel.app/ticket/${teamData.id}`;
+  const ticketUrl = `https://break-a-thon-2-k26-qglk.vercel.app/admin/checkin/${teamData.id}`;
 
   return (
     <main className="min-h-screen bg-black text-green-400 font-mono flex flex-col items-center justify-center p-4 selection:bg-green-500 selection:text-black">
