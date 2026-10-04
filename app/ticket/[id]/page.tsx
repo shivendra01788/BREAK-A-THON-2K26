@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 
 export default function TicketPage() {
   const params = useParams();
@@ -29,18 +29,22 @@ export default function TicketPage() {
   const handleDownload = async () => {
     if (!ticketRef.current) return;
     
-    // Capture the ticket at high resolution
-    const canvas = await html2canvas(ticketRef.current, {
-      backgroundColor: '#050505',
-      scale: 2, 
-    });
-    
-    const image = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = image;
-    // Format file name dynamically
-    link.download = `BreakAThon_Pass_${teamData.teamName.replace(/\s+/g, '_')}.png`;
-    link.click();
+    try {
+      // Capture the ticket using native browser rendering
+      const dataUrl = await toPng(ticketRef.current, {
+        backgroundColor: '#050505',
+        pixelRatio: 2, // High resolution for printing/zooming
+        cacheBust: true,
+      });
+      
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = `BreakAThon_Pass_${teamData.teamName.replace(/\s+/g, '_')}.png`;
+      link.click();
+    } catch (err) {
+      console.error("Failed to generate image", err);
+      alert("Failed to download the image. Please take a screenshot of your pass!");
+    }
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-black text-green-400 font-mono">Loading Pass Data...</div>;
@@ -90,10 +94,9 @@ export default function TicketPage() {
             </div>
           </div>
 
-          {/* Updated Professional Entrance Disclaimer */}
           <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-center w-full">
             <p className="text-xs text-red-400 font-bold tracking-widest mb-1">
-              ⚠️️ MANDATORY GATE PASS
+              ⚠ MANDATORY GATE PASS
             </p>
             <p className="text-[10px] text-red-400/80 uppercase">
               Valid for single-entry scan. Venue access will be strictly denied without this pass.
@@ -102,7 +105,7 @@ export default function TicketPage() {
         </div>
       </div>
 
-      {/* Download Button (Outside the ticket bounds so it doesn't appear in the image) */}
+      {/* Download Button */}
       <button 
         onClick={handleDownload} 
         className="mt-6 relative z-10 max-w-sm w-full px-8 py-4 bg-green-500 text-black font-extrabold rounded-xl hover:bg-green-400 hover:shadow-[0_0_20px_rgba(34,197,94,0.4)] transition-all uppercase tracking-widest flex items-center justify-center gap-3"
