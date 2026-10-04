@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
-import { QRCodeSVG } from "qrcode.react";
+import { QRCodeCanvas } from "qrcode.react"; // CHANGED TO CANVAS
 import { toPng } from "html-to-image";
 
 export default function TicketPage() {
@@ -30,10 +30,9 @@ export default function TicketPage() {
     if (!ticketRef.current) return;
     
     try {
-      // Capture the ticket using native browser rendering
       const dataUrl = await toPng(ticketRef.current, {
         backgroundColor: '#050505',
-        pixelRatio: 2, // High resolution for printing/zooming
+        pixelRatio: 2, 
         cacheBust: true,
       });
       
@@ -54,7 +53,6 @@ export default function TicketPage() {
     <main className="min-h-screen bg-black text-green-400 font-mono flex flex-col items-center justify-center p-4 selection:bg-green-500 selection:text-black">
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-green-600/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-      {/* The Actual Pass (Target for Download) */}
       <div 
         ref={ticketRef} 
         className="relative z-10 max-w-sm w-full bg-gray-950/90 rounded-2xl shadow-[0_0_40px_rgba(34,197,94,0.15)] overflow-hidden border border-green-500/50 backdrop-blur-md"
@@ -80,7 +78,8 @@ export default function TicketPage() {
           </div>
 
           <div className="bg-white p-4 rounded-xl shadow-[0_0_30px_rgba(34,197,94,0.3)] mb-6 inline-block border-2 border-green-500">
-            <QRCodeSVG value={teamData.id} size={180} level="H" />
+            {/* CHANGED TO CANVAS HERE */}
+            <QRCodeCanvas value={teamData.id} size={180} level="H" marginSize={2} />
           </div>
 
           <div className="w-full grid grid-cols-2 gap-4 border-t border-b border-green-500/30 py-4 mb-6">
@@ -105,7 +104,6 @@ export default function TicketPage() {
         </div>
       </div>
 
-      {/* Download Button */}
       <button 
         onClick={handleDownload} 
         className="mt-6 relative z-10 max-w-sm w-full px-8 py-4 bg-green-500 text-black font-extrabold rounded-xl hover:bg-green-400 hover:shadow-[0_0_20px_rgba(34,197,94,0.4)] transition-all uppercase tracking-widest flex items-center justify-center gap-3"
